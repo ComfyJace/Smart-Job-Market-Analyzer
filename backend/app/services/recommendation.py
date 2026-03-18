@@ -1,8 +1,9 @@
 from collections import Counter
 import pandas as pd
-from app.skill_dictionary import SKILL_ALIASES
+from app.skill_dictionary import get_alias_map
 from app.services.analytics import extract_skills_from_text
 
+_ALIAS_MAP = get_alias_map(include_short_aliases=True)
 def normalize_user_skills(user_skills: list[str]) -> list[str]:
     """
     Normalize user-provided skills into canonical skill names.
@@ -14,23 +15,21 @@ def normalize_user_skills(user_skills: list[str]) -> list[str]:
     normalized = []
 
     for user_skill in user_skills:
+        if not isinstance(user_skill, str):
+            continue
+        
         skill_lower = user_skill.lower().strip()
-        matched = False
-
-        for canonical_skill, aliases in SKILL_ALIASES.items():
-            if skill_lower == canonical_skill or skill_lower in aliases:
-                normalized.append(canonical_skill)
-                matched = True
-                break
-
-        if not matched:
-            normalized.append(skill_lower)
-
+        canonical_skill = _ALIAS_MAP.get(skill_lower)
+        normalized.append(canonical_skill if canonical_skill else skill_lower)
+  
     return normalized
 
 def analyze_skill_gap(user_skills: list, csv_path: str):
     df = pd.read_csv(csv_path)
 
+    if "description" not in df.columns:
+      raise ValueError("CSV must contain a 'description' column.")
+    
     all_skills = []
 
     # Extract all skills from job descriptions
@@ -41,13 +40,13 @@ def analyze_skill_gap(user_skills: list, csv_path: str):
     skill_counts = Counter(all_skills)
 
     # Normalize user input
-    user_skills = [s.lower() for s in user_skills]
+    normalized_user_skills = set(normalize_user_skills(user_skills))
 
     matched = []
     missing = []
 
     for skill in skill_counts.keys():
-        if skill in user_skills:
+        if skill in normalized_user_skills:
             matched.append(skill)
         else:
             missing.append(skill)
@@ -72,6 +71,9 @@ def analyze_role_skill_gap(role: str, user_skills: list[str], csv_path: str):
     """
     df = pd.read_csv(csv_path)
 
+    if "title" not in df.columns or "description" not in df.columns:
+        raise ValueError("CSV must contain 'title' and 'description' columns.")
+    
     # Filter job posts whose title matches the target role
     filtered_df = df[df["title"].str.contains(role, case=False, na=False)]
 
@@ -92,7 +94,7 @@ def analyze_role_skill_gap(role: str, user_skills: list[str], csv_path: str):
     skill_counts = Counter(all_skills)
 
     # Normalize user skills for comparison
-    normalized_user_skills = normalize_user_skills(user_skills)
+    normalized_user_skills = set(normalize_user_skills(user_skills))
 
     matched = []
     missing = []
