@@ -1,7 +1,7 @@
 title,company,location,description
-Machine Learning Engineer,Company A,Remote,"Looking for Python, PyTorch, AWS, Docker experience"
-Data Scientist,Company B,NY,"Must know Python, SQL, machine learning, pandas"
-Backend Engineer,Company C,Remote,"Experience in Java, Docker, SQL required"
-Data Scientist,Company D,CA,"Strong Python, SQL, TensorFlow, statistics background"
-ML Engineer,Company E,Remote,"Python, AWS, Kubernetes, deep learning experience required"
+Machine Learning Engineer,Company A,Remote,"Looking for Python, PyTorch, AWS cloud, Docker experience"
+Data Scientist,Company B,NY,"Must know Python, SQL, ML, pandas"
+Backend Engineer,Company C,Remote,"Experience in Java, Dockerized services, Postgres required"
+Data Scientist,Company D,CA,"Strong Python, SQL, TF, statistics background"
 QA Automation Engineer,Company F,Remote,"Automation testing, Python, Java, Selenium, SQL"
+Frontend Engineer,Company G,Remote,"Strong JS skills required"

@@ -1,8 +1,32 @@
 from collections import Counter
 import pandas as pd
-from app.skill_dictionary import SKILLS
+from app.skill_dictionary import SKILL_ALIASES
 from app.services.analytics import extract_skills_from_text
 
+def normalize_user_skills(user_skills: list[str]) -> list[str]:
+    """
+    Normalize user-provided skills into canonical skill names.
+
+    Example:
+    - 'js' -> 'javascript'
+    - 'tf' -> 'tensorflow'
+    """
+    normalized = []
+
+    for user_skill in user_skills:
+        skill_lower = user_skill.lower().strip()
+        matched = False
+
+        for canonical_skill, aliases in SKILL_ALIASES.items():
+            if skill_lower == canonical_skill or skill_lower in aliases:
+                normalized.append(canonical_skill)
+                matched = True
+                break
+
+        if not matched:
+            normalized.append(skill_lower)
+
+    return normalized
 
 def analyze_skill_gap(user_skills: list, csv_path: str):
     df = pd.read_csv(csv_path)
@@ -71,7 +95,7 @@ def analyze_role_skill_gap(role: str, user_skills: list[str], csv_path: str):
     skill_counts = Counter(all_skills)
 
     # Normalize user skills for comparison
-    normalized_user_skills = [skill.lower() for skill in user_skills]
+    normalized_user_skills = normalize_user_skills(user_skills)
 
     matched = []
     missing = []

@@ -1,16 +1,26 @@
 import pandas as pd
 from collections import Counter
-from app.skill_dictionary import SKILLS
+from app.skill_dictionary import SKILL_ALIASES
 
 def extract_skills_from_text(text: str):
+    """
+    Extract normalized skills from raw job description text.
+
+    Example:
+    - 'js' becomes 'javascript'
+    - 'ml' becomes 'machine learning'
+    - 'tf' becomes 'tensorflow'
+    """
     text = text.lower()
-    found = []
+    found = set()
 
-    for skill in SKILLS:
-        if skill in text:
-            found.append(skill)
+    for canonical_skill, aliases in SKILL_ALIASES.items():
+        for alias in aliases:
+            if alias in text:
+                found.add(canonical_skill)
+                break
 
-    return found
+    return list(found)
 
 
 def get_top_skills(csv_path: str):

@@ -1,16 +1,20 @@
-SKILLS = [
-    "python",
-    "sql",
-    "pandas",
-    "numpy",
-    "machine learning",
-    "deep learning",
-    "pytorch",
-    "tensorflow",
-    "aws",
-    "docker",
-    "kubernetes",
-    "java",
-    "c++",
-    "javascript"
-]
+SKILL_ALIASES = {
+    "python": ["python"],
+    "sql": ["sql"],
+    "pandas": ["pandas"],
+    "numpy": ["numpy"],
+    "machine learning": ["machine learning", "ml"],
+    "deep learning": ["deep learning", "dl"],
+    "pytorch": ["pytorch", "torch"],
+    "tensorflow": ["tensorflow", "tf"],
+    "aws": ["aws", "amazon web services", "aws cloud"],
+    "docker": ["docker", "dockerized"],
+    "kubernetes": ["kubernetes", "k8s"],
+    "java": ["java"],
+    "c++": ["c++", "cpp"],
+    "javascript": ["javascript", "js"],
+    "postgresql": ["postgresql", "postgres", "postgre"],
+    "selenium": ["selenium"],
+    "fastapi": ["fastapi"],
+    "scikit-learn": ["scikit-learn", "sklearn"]
+}
