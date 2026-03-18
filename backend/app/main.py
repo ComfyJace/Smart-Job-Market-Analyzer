@@ -17,6 +17,7 @@ from pydantic import BaseModel
 # Import business logic function
 from app.services.analytics import get_top_skills
 from app.services.recommendation import analyze_skill_gap
+from app.services.role_analysis import get_top_skills_by_role
 
 # Initialize FastAPI application
 app = FastAPI()
@@ -90,5 +91,18 @@ def skill_gap(request: SkillGapRequest):
     Output:
         matched skills, missing skills, and top recommendations
     """
-    result = analyze_skill_gap(request.user_skills, str(CSV_PATH))
-    return result
+    return analyze_skill_gap(request.user_skills, str(CSV_PATH))
+
+@app.post("/analytics/role-skills")
+def role_skills(role: str):
+    """
+    Analyzes top skills for a specific job role.
+
+    Input:
+        role (string)
+
+    Output:
+        job count and ranked skill list for that role
+    """
+    # For demonstration, we hardcode a role. In production, this would be dynamic.
+    return get_top_skills_by_role(role, str(CSV_PATH))
