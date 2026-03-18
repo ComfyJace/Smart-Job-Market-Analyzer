@@ -68,7 +68,7 @@ This project combines **data science, backend engineering, and NLP** to deliver 
 
 ### 1. Clone the repository
 
-git clone https://github.com/YOUR_USERNAME/smart-job-market-analyzer.git
+git clone https://github.com/ComfyJace/smart-job-market-analyzer.git
 cd smart-job-market-analyzer/backend
 
 ### 2. Create virtual environment
