@@ -11,16 +11,26 @@ Responsibilities:
 Author: ComfyJace
 """
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 
 
+
 # Import business logic function
-from app.services.analytics import get_top_skills, get_top_skills_by_role
+from app.services.analytics import get_top_skills, get_top_skills_by_role, compare_roles
 from app.services.recommendation import analyze_skill_gap, analyze_role_skill_gap
 from app.schemas import SkillGapRequest, RoleSkillGapRequest, SkillGapResponse, RoleSkillsResponse
+
 # Initialize FastAPI application
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ==============================
 # 📁 FILE PATH CONFIGURATION
@@ -119,3 +129,17 @@ def role_skill_gap(request: RoleSkillGapRequest):
         request.user_skills,
         str(CSV_PATH)
     )
+
+@app.post("/analytics/compare-roles")
+def compare_jobs(role_a: str, role_b: str):
+    """
+    Compares the top skills between two job roles.
+
+    Input:
+        role_a (string)
+        role_b (string)
+
+    Output:
+        top skills for each role and their overlap
+    """
+    return compare_roles(role_a, role_b, str(CSV_PATH))

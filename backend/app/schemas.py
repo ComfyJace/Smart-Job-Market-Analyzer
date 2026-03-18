@@ -21,6 +21,17 @@ class RoleSkillGapRequest(BaseModel):
             }
         }
     }
+class RoleComparisonRequest(BaseModel):
+    role_a: str
+    role_b: str
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "role_a": "Data Scientist",
+                "role_b": "Data Engineer"
+            }
+        }
+    }
 class SkillGapResponse(BaseModel):
     matched_skills: list[str] = Field(description="Skills that match between user input and job market demand")
     missing_skills: list[str] = Field(description="Skills found in the market but missing from the user's profile")

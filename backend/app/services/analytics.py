@@ -63,3 +63,18 @@ def get_top_skills_by_role(role: str, csv_path: str):
         "job_count": len(filtered_df),
         "top_skills": count_skills_from_descriptions(filtered_df["description"])
     }
+
+def compare_roles(role_a: str, role_b: str, csv_path: str):
+  skills_a = get_top_skills_by_role(role_a, csv_path)
+  skills_b = get_top_skills_by_role(role_b, csv_path)
+  
+  shared_skills = set(skills_a["top_skills"].keys()) & set(skills_b["top_skills"].keys())
+  unique_a = set(skills_a["top_skills"].keys()) - shared_skills
+  unique_b = set(skills_b["top_skills"].keys()) - shared_skills
+  return {
+      "role_a": skills_a,
+      "role_b": skills_b,
+      "shared_skills": list(shared_skills),
+      "unique_to_role_a": list(unique_a),
+      "unique_to_role_b": list(unique_b)
+  }
