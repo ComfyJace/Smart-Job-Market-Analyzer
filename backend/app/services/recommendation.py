@@ -62,7 +62,7 @@ def analyze_skill_gap(user_skills: list, csv_path: str):
     return {
         "matched_skills": matched,
         "missing_skills": missing_sorted,
-        "top_recommended": missing_sorted[:3]
+        "top_recommendations": missing_sorted[:3]
     }
 
 def analyze_role_skill_gap(role: str, user_skills: list[str], csv_path: str):
@@ -77,12 +77,9 @@ def analyze_role_skill_gap(role: str, user_skills: list[str], csv_path: str):
 
     if filtered_df.empty:
         return {
-            "role": role,
-            "job_count": 0,
             "matched_skills": [],
             "missing_skills": [],
-            "top_recommended": [],
-            "message": f"No job listings found for role: {role}"
+            "top_recommendations": [],
         }
 
     all_skills = []
@@ -113,9 +110,7 @@ def analyze_role_skill_gap(role: str, user_skills: list[str], csv_path: str):
     )
 
     return {
-        "role": role,
-        "job_count": len(filtered_df),
         "matched_skills": matched,
         "missing_skills": missing_sorted,
-        "top_recommended": missing_sorted[:3]
+        "top_recommendations": missing_sorted[:3]
     }

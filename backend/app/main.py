@@ -26,7 +26,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Frontend origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -99,7 +99,7 @@ def skill_gap(request: SkillGapRequest):
     """
     return analyze_skill_gap(request.user_skills, str(CSV_PATH))
 
-@app.post("/analytics/role-skills", response_model=RoleSkillsResponse)
+@app.get("/analytics/role-skills", response_model=RoleSkillsResponse)
 def role_skills(role: str):
     """
     Analyzes top skills for a specific job role.
