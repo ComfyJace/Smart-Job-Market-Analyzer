@@ -17,7 +17,7 @@ from pathlib import Path
 # Import business logic function
 from app.services.analytics import get_top_skills, get_top_skills_by_role
 from app.services.recommendation import analyze_skill_gap, analyze_role_skill_gap
-from app.schemas import SkillGapRequest, RoleSkillGapRequest, SkillGapResponse, RoleSkillsResponse, TopSkillsResponse
+from app.schemas import SkillGapRequest, RoleSkillGapRequest, SkillGapResponse, RoleSkillsResponse
 # Initialize FastAPI application
 app = FastAPI()
 
@@ -37,9 +37,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Navigate to project root, then into data folder
 # backend → parent → project root → data/sample_jobs.csv
 CSV_PATH = BASE_DIR.parent / "data" / "sample_jobs.csv"
-
-
-
 
 # ==============================
 # 🌐 API ROUTES

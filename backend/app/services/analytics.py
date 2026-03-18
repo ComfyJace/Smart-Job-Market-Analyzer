@@ -1,6 +1,16 @@
 import pandas as pd
+import re
 from collections import Counter
 from app.skill_dictionary import SKILL_ALIASES
+
+def count_skills_from_descriptions(descriptions):
+    all_skills = []
+
+    for desc in descriptions:
+        skills = extract_skills_from_text(desc)
+        all_skills.extend(skills)
+
+    return dict(Counter(all_skills).most_common())
 
 def extract_skills_from_text(text: str):
     """
@@ -16,7 +26,8 @@ def extract_skills_from_text(text: str):
 
     for canonical_skill, aliases in SKILL_ALIASES.items():
         for alias in aliases:
-            if alias in text:
+            pattern = r'\b' + re.escape(alias) + r'\b'
+            if re.search(pattern, text):
                 found.add(canonical_skill)
                 break
 
@@ -26,15 +37,10 @@ def extract_skills_from_text(text: str):
 def get_top_skills(csv_path: str):
     df = pd.read_csv(csv_path)
 
-    all_skills = []
+    if "description" not in df.columns:
+        raise ValueError("CSV must contain a 'description' column.")
 
-    for desc in df["description"]:
-        skills = extract_skills_from_text(str(desc))
-        all_skills.extend(skills)
-
-    counter = Counter(all_skills)
-
-    return dict(counter.most_common())
+    return count_skills_from_descriptions(df["description"])
 
 def get_top_skills_by_role(role: str, csv_path: str):
     df = pd.read_csv(csv_path)
@@ -42,6 +48,9 @@ def get_top_skills_by_role(role: str, csv_path: str):
     # Filter rows whose title contains the requested role text
     filtered_df = df[df["title"].str.contains(role, case=False, na=False)]
 
+    if "title" not in df.columns or "description" not in df.columns:
+        raise ValueError("CSV must contain 'title' and 'description' columns.")
+    
     if filtered_df.empty:
         return {
             "role": role,
@@ -49,16 +58,8 @@ def get_top_skills_by_role(role: str, csv_path: str):
             "top_skills": {}
         }
 
-    all_skills = []
-
-    for desc in filtered_df["description"]:
-        skills = extract_skills_from_text(str(desc))
-        all_skills.extend(skills)
-
-    skill_counts = Counter(all_skills)
-
     return {
         "role": role,
         "job_count": len(filtered_df),
-        "top_skills": dict(skill_counts.most_common())
+        "top_skills": count_skills_from_descriptions(filtered_df["description"])
     }

@@ -30,7 +30,3 @@ class RoleSkillsResponse(BaseModel):
     role: str
     job_count: int
     top_skills: dict[str, int]
-
-
-class TopSkillsResponse(RootModel[dict[str, int]]):
-    pass
