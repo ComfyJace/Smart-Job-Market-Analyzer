@@ -12,9 +12,11 @@ Author: ComfyJace
 """
 from fastapi import FastAPI
 from pathlib import Path
+from pydantic import BaseModel
 
 # Import business logic function
 from app.services.analytics import get_top_skills
+from app.services.recommendation import analyze_skill_gap
 
 # Initialize FastAPI application
 app = FastAPI()
@@ -36,6 +38,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # backend → parent → project root → data/sample_jobs.csv
 CSV_PATH = BASE_DIR.parent / "data" / "sample_jobs.csv"
 
+class SkillGapRequest(BaseModel):
+    user_skills: list[str]
 
 # ==============================
 # 🌐 API ROUTES
@@ -74,3 +78,17 @@ def top_skills():
         dict: { skill_name: frequency }
     """
     return get_top_skills(str(CSV_PATH))
+
+@app.post("/recommendations/skill-gap")
+def skill_gap(request: SkillGapRequest):
+    """
+    Analyzes the skill gap between user-provided skills and job market demand.
+
+    Input:
+        list of user skills
+
+    Output:
+        matched skills, missing skills, and top recommendations
+    """
+    result = analyze_skill_gap(request.user_skills, str(CSV_PATH))
+    return result
