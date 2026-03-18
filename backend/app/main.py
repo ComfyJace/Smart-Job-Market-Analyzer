@@ -17,7 +17,7 @@ from pydantic import BaseModel
 # Import business logic function
 from app.services.analytics import get_top_skills
 from app.services.recommendation import analyze_skill_gap
-from app.services.role_analysis import get_top_skills_by_role
+from app.services.analytics import get_top_skills_by_role
 
 # Initialize FastAPI application
 app = FastAPI()
@@ -41,6 +41,11 @@ CSV_PATH = BASE_DIR.parent / "data" / "sample_jobs.csv"
 
 class SkillGapRequest(BaseModel):
     user_skills: list[str]
+
+class RoleSkillGapRequest(BaseModel):
+    role: str
+    user_skills: list[str]
+
 
 # ==============================
 # 🌐 API ROUTES
