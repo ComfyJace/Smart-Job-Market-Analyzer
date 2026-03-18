@@ -12,12 +12,12 @@ Author: ComfyJace
 """
 from fastapi import FastAPI
 from pathlib import Path
-from pydantic import BaseModel
+
 
 # Import business logic function
 from app.services.analytics import get_top_skills, get_top_skills_by_role
 from app.services.recommendation import analyze_skill_gap, analyze_role_skill_gap
-
+from app.schemas import SkillGapRequest, RoleSkillGapRequest, SkillGapResponse, RoleSkillsResponse, TopSkillsResponse
 # Initialize FastAPI application
 app = FastAPI()
 
@@ -38,12 +38,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # backend → parent → project root → data/sample_jobs.csv
 CSV_PATH = BASE_DIR.parent / "data" / "sample_jobs.csv"
 
-class SkillGapRequest(BaseModel):
-    user_skills: list[str]
 
-class RoleSkillGapRequest(BaseModel):
-    role: str
-    user_skills: list[str]
 
 
 # ==============================
@@ -84,7 +79,7 @@ def top_skills():
     """
     return get_top_skills(str(CSV_PATH))
 
-@app.post("/recommendations/skill-gap")
+@app.post("/recommendations/skill-gap", response_model=SkillGapResponse)
 def skill_gap(request: SkillGapRequest):
     """
     Analyzes the skill gap between user-provided skills and job market demand.
@@ -97,7 +92,7 @@ def skill_gap(request: SkillGapRequest):
     """
     return analyze_skill_gap(request.user_skills, str(CSV_PATH))
 
-@app.post("/analytics/role-skills")
+@app.post("/analytics/role-skills", response_model=RoleSkillsResponse)
 def role_skills(role: str):
     """
     Analyzes top skills for a specific job role.
